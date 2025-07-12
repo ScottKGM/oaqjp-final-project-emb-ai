@@ -11,7 +11,14 @@ def emotion_detector(text_to_analyze):
 
     try:
         response = requests.post(url, headers=headers, json=data)
-        return response.json()
+        result = response.json()
     except requests.exceptions.RequestException as e:
         print(f"An error occurred: {e}")
         return None
+    
+    emotions = result['emotionPredictions'][0]['emotion']
+    top_emotion = max(emotions.items(), key = lambda x: x[1])
+    emotions['dominant_emotion'] = top_emotion[0]
+    
+    return emotions
+
